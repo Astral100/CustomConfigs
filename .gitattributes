@@ -1,0 +1,5 @@
+# Pin LF regardless of any machine's core.autocrlf (the snapshotted gitconfig
+# sets autocrlf=true, which would otherwise CRLF-corrupt these scripts on a
+# fresh WSL clone and break ./save.sh / ./restore.sh with "bad interpreter").
+# PowerShell and Windows Terminal read LF files fine.
+* text=auto eol=lf

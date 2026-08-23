@@ -1,0 +1,4 @@
+.backups/
+**/.credentials.json
+**/hosts.yml
+*.bak
