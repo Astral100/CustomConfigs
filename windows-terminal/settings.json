@@ -56,7 +56,7 @@
             {
                 "guid": "{bb66f164-9e78-569c-ad58-ec3208008116}",
                 "hidden": false,
-                "name": "Ubuntu",
+                "name": "[WSL] Ubuntu-22.04",
                 "source": "Microsoft.WSL",
                 "colorScheme": "Campbell",
                 "cursorShape": "bar",

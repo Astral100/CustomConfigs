@@ -75,10 +75,29 @@ for f in CLAUDE.md settings.json keybindings.json statusline-command.sh; do
 done
 # -L dereferences symlinks so the repo holds real files (skills/* point into
 # ~/.agents/skills, the fork-watch scripts point into ~/ClaudeBugFixes).
-for d in scripts agents skills notes; do
+for d in scripts notes; do
   mkdir -p "$REPO/claude/$d"
   rsync -aL --delete ~/.claude/"$d"/ "$REPO/claude/$d/" && echo "saved: claude/$d/"
 done
+# Agents: keep only code-reviewer — the one definition that's actually used.
+# The rest of ~/.claude/agents is Claude-generated tooling (2026-07-29 session),
+# never invoked, regenerable on demand. --delete-excluded purges saved copies.
+mkdir -p "$REPO/claude/agents"
+rsync -aL --delete --delete-excluded --include 'code-reviewer.md' --exclude '*' ~/.claude/agents/ "$REPO/claude/agents/" \
+  && echo "saved: claude/agents/ (code-reviewer only)"
+# Skills: exclude the Matt Pocock pack (identified by its agents/openai.yaml
+# marker) — installed software, reinstallable from its source, not hand-kept
+# config. --delete-excluded purges previously saved pack copies from the repo.
+SKILL_EXCLUDES=(); PACK_COUNT=0
+for s in "$HOME"/.claude/skills/*/; do
+  if [ -f "$s/agents/openai.yaml" ]; then
+    SKILL_EXCLUDES+=(--exclude "/$(basename "$s")/")
+    PACK_COUNT=$((PACK_COUNT + 1))
+  fi
+done
+mkdir -p "$REPO/claude/skills"
+rsync -aL --delete --delete-excluded "${SKILL_EXCLUDES[@]}" ~/.claude/skills/ "$REPO/claude/skills/" \
+  && echo "saved: claude/skills/ ($PACK_COUNT Matt Pocock pack skills excluded)"
 
 # --- Safety net: secrets must never land in the repo --------------------------
 find "$REPO" -path "$REPO/.git" -prune -o \( -name '.credentials.json' -o -name 'hosts.yml' \) -print -exec rm -f {} \; | sed 's/^/REMOVED secret file: /'

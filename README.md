@@ -12,7 +12,8 @@ Only real customizations are stored — no defaults, no machine state, no secret
 | `bash/` | `bashrc-custom.sh` — only the custom tail appended after stock Ubuntu skel (PATH, nvm, `claude()` wrapper, aliases, OSC 9;9) | end of `~/.bashrc` |
 | `wsl/` | `wsl.conf` (systemd, default user), `.wslconfig` (guiApplications=false) | `/etc/wsl.conf`, `C:\Users\<user>\.wslconfig` |
 | `git/` | `gitconfig` (autocrlf, gh credential helper), global `ignore` | `~/.gitconfig`, `~/.config/git/ignore` |
-| `claude/` | `CLAUDE.md`, `settings.json`, `keybindings.json`, `statusline-command.sh`, `scripts/`, `agents/`, `skills/`, `notes/` | `~/.claude/` |
+| `claude/` | `CLAUDE.md`, `settings.json`, `keybindings.json`, `statusline-command.sh`, `scripts/`, `agents/` (code-reviewer only), `skills/` (hand-kept only), `notes/` | `~/.claude/` |
+| `lib/` | `jsonc-to-json.py` — JSONC→JSON sanitizer used by both scripts | (repo tooling, not restored anywhere) |
 
 ## Usage
 
@@ -34,7 +35,12 @@ Area-specific restore behavior:
 - **Windows Terminal**: merges — only actions, keybindings, `copyFormatting` and
   `defaultProfile` are ported; the machine's profile list (generated GUIDs) is
   never touched. On a key bound differently on both sides, the repo wins (after
-  a warning and the usual prompt).
+  a warning and the usual prompt). WT files may contain JSONC extras (comments,
+  trailing commas — WT itself allows them); both sides are run through
+  `lib/jsonc-to-json.py` before merging, and if a side still won't parse the WT
+  section is skipped loudly — never replaced wholesale. The confirmation diff
+  compares key-sorted JSON renderings, so it shows only real changes, not
+  formatting noise.
 - **Bash**: the block is appended between `# >>> CustomConfigs >>>` /
   `# <<< CustomConfigs <<<` markers and updated in place on later runs. If the
   content already exists unmarked (the original machine), restore reports it and
@@ -48,6 +54,8 @@ Area-specific restore behavior:
 - `~/.claude/.credentials.json`, `~/.config/gh/hosts.yml`, `~/.ssh/` — secrets/keys; recreate by hand (`gh auth login`, `ssh-keygen`).
 - Windows Terminal profile list — GUIDs are machine-generated; restore merges only actions/keybindings/globals.
 - Runtime state: `~/.claude.json`, history, sessions, caches.
+- The Matt Pocock skill pack — installed software, reinstallable from its source;
+  `save.sh` auto-excludes any skill carrying the pack's `agents/openai.yaml` marker.
 
 Note: on the original machine `~/.claude/skills/*` are symlinks into `~/.agents/skills/`;
 `save.sh` dereferences them so the repo stores real files. `restore.sh` writes real
@@ -65,4 +73,7 @@ directories under `~/.claude/skills/` on a fresh machine (no symlink layer neede
 
 - PSReadLine module (ships with PowerShell 5.1+/7; profile assumes it).
 - nvm at `~/.nvm` (bashrc block sources it if present — safe when missing).
-- `jq` in WSL (used by the `claude()` bash wrapper and by `restore.sh`).
+- `jq` in WSL (used by the `claude()` bash wrapper and by `restore.sh`; the
+  Windows Terminal section is skipped with a hint if it's missing).
+- `python3` in WSL (optional — runs the JSONC sanitizer; without it, WT files
+  containing comments/trailing commas make the WT merge skip instead).
