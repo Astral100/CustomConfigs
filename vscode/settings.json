@@ -1,0 +1,67 @@
+{
+  "window.zoomLevel": 2,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.quoteStyle": "double",
+  "update.mode": "manual",
+  "editor.codeActionsOnSave": {
+    // "source.organizeImports": true
+  },
+  "terminal.integrated.shellArgs.windows": [
+    "-ExecutionPolicy",
+    "Bypass"
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.tabCompletion": "on"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.tabSize": 2,
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.tabCompletion": "on"
+  },
+  "gitlens.views.repositories.location": "gitlens",
+  "gitlens.views.fileHistory.location": "gitlens",
+  "gitlens.views.lineHistory.location": "gitlens",
+  "gitlens.views.compare.location": "gitlens",
+  "gitlens.views.search.location": "gitlens",
+  "gitlens.currentLine.enabled": false,
+  "gitlens.hovers.currentLine.over": "line",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "gitlens.hovers.enabled": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "files.maxMemoryForLargeFilesMB": 12288,
+  "editor.largeFileOptimizations": false,
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp"
+    // "editor.defaultFormatter": "ms-dotnettools.csdevkit"
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "files.autoSave": "afterDelay",
+  "github.copilot.enable": {
+    "typescript": false,
+    "javascript": false,
+    "*": false
+  },
+  "workbench.editorAssociations": {   
+    "*.md": "vscode.markdown.preview.editor",
+  },
+  "claudeCode.preferredLocation": "panel",
+  "terminal.integrated.gpuAcceleration": "off",
+  "chat.disableAIFeatures": true,
+  "workbench.colorTheme": "Dark Modern",
+  "editor.mouseWheelZoom": true
+}

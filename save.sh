@@ -99,6 +99,38 @@ mkdir -p "$REPO/claude/skills"
 rsync -aL --delete --delete-excluded "${SKILL_EXCLUDES[@]}" ~/.claude/skills/ "$REPO/claude/skills/" \
   && echo "saved: claude/skills/ ($PACK_COUNT Matt Pocock pack skills excluded)"
 
+# --- Notepad++ (only config.xml prefs + hand-edited colors in stylers.xml;
+# shortcuts.xml/contextMenu.xml/themes are stock on this machine) --------------
+NPP_DIR="$WIN_HOME/AppData/Roaming/Notepad++"
+copy "$NPP_DIR/config.xml" notepad++/config.xml
+copy "$NPP_DIR/stylers.xml" notepad++/stylers.xml
+
+# --- Cmder (config lives in the INSTALL dir, not the user profile) ------------
+CMDER_CFG="/mnt/c/Program Files/cmder/config"
+copy "$CMDER_CFG/user-ConEmu.xml" cmder/user-ConEmu.xml
+copy "$CMDER_CFG/settings" cmder/settings
+# user_profile.* and user_aliases.cmd are untouched stock templates — not saved.
+
+# --- VS Code ------------------------------------------------------------------
+VSCODE_USER="$WIN_HOME/AppData/Roaming/Code/User"
+copy "$VSCODE_USER/settings.json" vscode/settings.json
+copy "$VSCODE_USER/keybindings.json" vscode/keybindings.json
+if [ -d "$VSCODE_USER/snippets" ]; then
+  mkdir -p "$REPO/vscode/snippets"
+  rsync -a --delete "$VSCODE_USER/snippets/" "$REPO/vscode/snippets/" && echo "saved: vscode/snippets/"
+elif [ -d "$REPO/vscode/snippets" ]; then
+  # Live folder is gone — mirror the deletion so the repo doesn't keep stale snippets.
+  rm -rf "$REPO/vscode/snippets" && echo "removed: vscode/snippets/ (live folder no longer exists)"
+fi
+# Extension IDs (deduped across versions) — a reinstall list, not the binaries.
+# Glob loop instead of ls|xargs: a dir name with spaces must not get split.
+if [ -d "$WIN_HOME/.vscode/extensions" ]; then
+  for d in "$WIN_HOME/.vscode/extensions"/*/; do
+    [ -e "$d" ] && basename "$d"
+  done | sed -E 's/-[0-9]+\.[0-9]+\.[0-9]+.*$//' | sort -u > "$REPO/vscode/extensions.txt" \
+    && echo "saved: vscode/extensions.txt ($(wc -l < "$REPO/vscode/extensions.txt") extensions)"
+fi
+
 # --- Safety net: secrets must never land in the repo --------------------------
 find "$REPO" -path "$REPO/.git" -prune -o \( -name '.credentials.json' -o -name 'hosts.yml' \) -print -exec rm -f {} \; | sed 's/^/REMOVED secret file: /'
 

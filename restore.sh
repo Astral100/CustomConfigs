@@ -248,4 +248,64 @@ for d in scripts agents skills notes; do
 done
 
 echo
+echo "== Notepad++ =="
+# N++ rewrites config.xml when it exits — close Notepad++ first, or the running
+# instance clobbers the restored file on close.
+NPP_DIR="$WIN_HOME/AppData/Roaming/Notepad++"
+if [ -d "$NPP_DIR" ]; then
+  note "close Notepad++ before overwriting — it rewrites config.xml on exit"
+  install_file notepad++/config.xml "$NPP_DIR/config.xml"
+  install_file notepad++/stylers.xml "$NPP_DIR/stylers.xml"
+else
+  note "Notepad++ not found ($NPP_DIR missing) — skipping"
+fi
+
+echo
+echo "== Cmder =="
+# Config sits under C:\Program Files — writes from WSL may need an elevated
+# context; a failed cp here means: copy the file from an admin shell instead.
+CMDER_CFG="/mnt/c/Program Files/cmder/config"
+if [ -d "$CMDER_CFG" ]; then
+  install_file cmder/user-ConEmu.xml "$CMDER_CFG/user-ConEmu.xml"
+  install_file cmder/settings "$CMDER_CFG/settings"
+else
+  note "Cmder not found ($CMDER_CFG missing) — skipping"
+fi
+
+echo
+echo "== VS Code =="
+VSCODE_USER="$WIN_HOME/AppData/Roaming/Code/User"
+if [ -d "$VSCODE_USER" ]; then
+  install_file vscode/settings.json "$VSCODE_USER/settings.json"
+  install_file vscode/keybindings.json "$VSCODE_USER/keybindings.json"
+  # Per-file so machine-local snippets are never deleted.
+  if [ -d "$REPO/vscode/snippets" ]; then
+    while IFS= read -r -d '' src; do
+      rel="${src#"$REPO/vscode/"}"
+      install_file "vscode/$rel" "$VSCODE_USER/$rel"
+    done < <(find "$REPO/vscode/snippets" -type f -print0)
+  fi
+  # Extensions: report missing ones; installing is a manual step (needs code CLI).
+  if [ -f "$REPO/vscode/extensions.txt" ] && [ -d "$WIN_HOME/.vscode/extensions" ]; then
+    # Exact-ID comparison using the same version-stripping as save.sh — a bare
+    # "$ext"-* glob would false-match when one ID is a hyphen-prefix of another
+    # (e.g. cpptools present only as cpptools-extension-pack).
+    INSTALLED="$(for d in "$WIN_HOME/.vscode/extensions"/*/; do
+                   [ -e "$d" ] && basename "$d"
+                 done | sed -E 's/-[0-9]+\.[0-9]+\.[0-9]+.*$//' | sort -u)"
+    MISSING=0
+    while IFS= read -r ext; do
+      [ -n "$ext" ] || continue
+      printf '%s\n' "$INSTALLED" | grep -qxF "$ext" \
+        || { note "extension missing: $ext"; MISSING=1; }
+    done < "$REPO/vscode/extensions.txt"
+    [ "$MISSING" = 1 ] \
+      && note "install missing ones from Windows cmd: for /f %i in (vscode\\extensions.txt) do code --install-extension %i" \
+      || echo "up to date: VS Code extensions"
+  fi
+else
+  note "VS Code not found ($VSCODE_USER missing) — skipping"
+fi
+
+echo
 echo "Done. Backups (if any) are in: $BACKUP_DIR"

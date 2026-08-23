@@ -13,6 +13,9 @@ Only real customizations are stored — no defaults, no machine state, no secret
 | `wsl/` | `wsl.conf` (systemd, default user), `.wslconfig` (guiApplications=false) | `/etc/wsl.conf`, `C:\Users\<user>\.wslconfig` |
 | `git/` | `gitconfig` (autocrlf, gh credential helper), global `ignore` | `~/.gitconfig`, `~/.config/git/ignore` |
 | `claude/` | `CLAUDE.md`, `settings.json`, `keybindings.json`, `statusline-command.sh`, `scripts/`, `agents/` (code-reviewer only), `skills/` (hand-kept only), `notes/` | `~/.claude/` |
+| `notepad++/` | `config.xml` (word wrap, tab size 4, indent guides, date-time format, ~a dozen prefs), `stylers.xml` (hand-edited colors: current-line, selection, caret) | `%APPDATA%\Notepad++\` |
+| `cmder/` | `user-ConEmu.xml` (Consolas 18, custom color table, startup tasks), `settings` (clink: Ctrl+D exits, Esc clears line) | `C:\Program Files\cmder\config\` — the **install dir**, not the user profile |
+| `vscode/` | `settings.json` (40+ prefs), `keybindings.json` (5 rebinds), `snippets/`, `extensions.txt` (deduped reinstall list) | `%APPDATA%\Code\User\`; extensions in `%USERPROFILE%\.vscode\extensions\` |
 | `lib/` | `jsonc-to-json.py` — JSONC→JSON sanitizer used by both scripts | (repo tooling, not restored anywhere) |
 
 ## Usage
@@ -48,6 +51,13 @@ Area-specific restore behavior:
 - **wsl.conf**: `[user] default=` is rewritten to the *current* machine's
   username before installing, so a foreign username can never break WSL login.
 - **Claude**: per-file, so machine-local extras are never deleted.
+- **Notepad++**: close it before overwriting — it rewrites `config.xml` on exit
+  and would clobber the restored file.
+- **Cmder**: targets live under `C:\Program Files`, where WSL writes can fail
+  without elevation — if the copy fails, do it from an admin shell.
+- **VS Code**: snippets restore per-file (local extras kept). Extensions are not
+  auto-installed; restore reports which IDs from `extensions.txt` are missing and
+  prints the `code --install-extension` one-liner to install them.
 
 ## Not stored (on purpose)
 
@@ -56,6 +66,13 @@ Area-specific restore behavior:
 - Runtime state: `~/.claude.json`, history, sessions, caches.
 - The Matt Pocock skill pack — installed software, reinstallable from its source;
   `save.sh` auto-excludes any skill carrying the pack's `agents/openai.yaml` marker.
+- Notepad++ `shortcuts.xml`/`contextMenu.xml`/themes — byte-identical to the
+  shipped files on this machine (the macros in shortcuts.xml are stock).
+- Cmder `user_profile.cmd/.ps1/.sh` and `user_aliases.cmd` — untouched stock
+  templates from the 2020 install.
+- Visual Studio 2022 — no user snippets/templates exist; `CurrentSettings.vssettings`
+  is 370 KB of auto-written machine state. (Only deliberate artifact: a 3.7 KB
+  fonts-and-colors export in the 17.0 Settings dir — grab by hand if ever wanted.)
 
 Note: on the original machine `~/.claude/skills/*` are symlinks into `~/.agents/skills/`;
 `save.sh` dereferences them so the repo stores real files. `restore.sh` writes real

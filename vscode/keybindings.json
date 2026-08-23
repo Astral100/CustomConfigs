@@ -1,0 +1,49 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+    {
+        "key": "alt+left",
+        "command": "workbench.action.navigateBack"
+    },
+    {
+        "key": "alt+left",
+        "command": "-workbench.action.navigateBack"
+    },
+    {
+        "key": "alt+right",
+        "command": "workbench.action.navigateForward"
+    },
+    {
+        "key": "alt+right",
+        "command": "-workbench.action.navigateForward"
+    },
+    {
+      "key": "ctrl+i",
+      "command": "workbench.panel.chat",
+      "when": "workbench.panel.chat.view.copilot.active"
+    },
+    {
+      "key": "ctrl+alt+i",
+      "command": "-workbench.panel.chat",
+      "when": "workbench.panel.chat.view.copilot.active"
+    },
+    {
+      "key": "ctrl+alt+i",
+      "command": "search.action.searchWithAI",
+      "when": "hasAIResultProviderKey && searchViewletFocus"
+    },
+    {
+      "key": "ctrl+i",
+      "command": "-search.action.searchWithAI",
+      "when": "hasAIResultProviderKey && searchViewletFocus"
+    },
+    {
+      "key": "f12",
+      "command": "editor.action.goToImplementation",
+      "when": "editorHasImplementationProvider && editorTextFocus"
+    },
+    {
+      "key": "ctrl+f12",
+      "command": "-editor.action.goToImplementation",
+      "when": "editorHasImplementationProvider && editorTextFocus"
+    }
+]

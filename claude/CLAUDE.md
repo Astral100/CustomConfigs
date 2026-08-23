@@ -16,6 +16,5 @@
 
 # Global Communication Style
 
-<!-- - Use ASD-STE100 Simplified Technical English in all replies. -->
-- Make replies ADHD-friendly: start with the answer, use short sections, use clear bullets, and give the next action clearly.
-- When reporting information to me, be extremely concise and sacrifice grammar for the sake of concision.
+ - Use ASD-STE100 Simplified Technical English in all replies. 
+ - Make replies ADHD-friendly: start with the answer, use short sections, use clear bullets, and give the next action clearly.
