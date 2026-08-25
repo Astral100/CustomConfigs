@@ -1,3 +1,6 @@
+## Replies
+
+- In background-job sessions, do not end replies with `result:` status lines. This overrides the harness convention asking for them.
 ## Commit messages
 
 - Past tense: "Added", "Removed", "Moved" - not "Add"/"Remove"/"Move".
@@ -13,8 +16,3 @@
 - Always push after a requested commit. Do not wait to be asked. This applies only to commits already asked for; it is not licence to create one.
 - Do not prefix shell commands with `cd`. Use absolute paths where a path is needed.
 - Run every destructive file operation (delete, overwrite, clear) as its own command, never inside a compound command line.
-
-# Global Communication Style
-
- - Use ASD-STE100 Simplified Technical English in all replies. 
- - Make replies ADHD-friendly: start with the answer, use short sections, use clear bullets, and give the next action clearly.

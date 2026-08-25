@@ -63,5 +63,6 @@
   "terminal.integrated.gpuAcceleration": "off",
   "chat.disableAIFeatures": true,
   "workbench.colorTheme": "Dark Modern",
-  "editor.mouseWheelZoom": true
+  "editor.mouseWheelZoom": true,
+  "security.workspace.trust.enabled": false
 }
