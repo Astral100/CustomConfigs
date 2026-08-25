@@ -308,4 +308,45 @@ else
 fi
 
 echo
+echo "== Obsidian =="
+OBS_VAULT="$WIN_HOME/Documents/Obsidian Vault"
+OBS_CFG="$OBS_VAULT/.obsidian"
+if [ -d "$OBS_CFG" ]; then
+  note "close Obsidian before overwriting — it rewrites .obsidian/*.json on exit"
+  for f in app.json appearance.json community-plugins.json core-plugins.json graph.json hotkeys.json; do
+    install_file "obsidian/$f" "$OBS_CFG/$f"
+  done
+  # Per-file so machine-local snippets are never deleted.
+  if [ -d "$REPO/obsidian/snippets" ]; then
+    while IFS= read -r -d '' src; do
+      rel="${src#"$REPO/obsidian/"}"
+      install_file "obsidian/$rel" "$OBS_CFG/$rel"
+    done < <(find "$REPO/obsidian/snippets" -type f -print0)
+  fi
+  # Plugin settings land only where the plugin is already installed — a data.json
+  # without its plugin would just confuse Obsidian. Plugins are not auto-installed:
+  # install missing ones inside Obsidian, then re-run restore for their settings.
+  if [ -d "$REPO/obsidian/plugins" ]; then
+    for p in "$REPO/obsidian/plugins"/*/; do
+      [ -e "$p" ] || continue
+      name="$(basename "$p")"
+      if [ -d "$OBS_CFG/plugins/$name" ]; then
+        install_file "obsidian/plugins/$name/data.json" "$OBS_CFG/plugins/$name/data.json"
+      else
+        note "plugin not installed: $name — install it in Obsidian, then re-run restore for its settings"
+      fi
+    done
+  fi
+  # Vault-root user scripts (QuickAdd macros reference them by file name).
+  if [ -d "$REPO/obsidian/vault-scripts" ]; then
+    for src in "$REPO/obsidian/vault-scripts"/*.js; do
+      [ -e "$src" ] || continue
+      install_file "obsidian/vault-scripts/$(basename "$src")" "$OBS_VAULT/$(basename "$src")"
+    done
+  fi
+else
+  note "Obsidian vault not found ($OBS_CFG missing) — skipping"
+fi
+
+echo
 echo "Done. Backups (if any) are in: $BACKUP_DIR"

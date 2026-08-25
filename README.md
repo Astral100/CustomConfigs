@@ -16,6 +16,7 @@ Only real customizations are stored — no defaults, no machine state, no secret
 | `notepad++/` | `config.xml` (word wrap, tab size 4, indent guides, date-time format, ~a dozen prefs), `stylers.xml` (hand-edited colors: current-line, selection, caret) | `%APPDATA%\Notepad++\` |
 | `cmder/` | `user-ConEmu.xml` (Consolas 18, custom color table, startup tasks), `settings` (clink: Ctrl+D exits, Esc clears line) | `C:\Program Files\cmder\config\` — the **install dir**, not the user profile |
 | `vscode/` | `settings.json` (40+ prefs), `keybindings.json` (5 rebinds), `snippets/`, `extensions.txt` (deduped reinstall list) | `%APPDATA%\Code\User\`; extensions in `%USERPROFILE%\.vscode\extensions\` |
+| `obsidian/` | vault settings (`hotkeys.json`, `appearance.json`, `app.json`, `graph.json`, plugin lists), `snippets/` (3 custom CSS), `plugins/` (per-plugin `data.json` — QuickAdd "Bold Line" macro etc.), `vault-scripts/` (`ToggleLineBold.js`) | `Documents\Obsidian Vault\.obsidian\`; scripts in the vault root |
 | `lib/` | `jsonc-to-json.py` — JSONC→JSON sanitizer used by both scripts | (repo tooling, not restored anywhere) |
 
 ## Usage
@@ -58,6 +59,11 @@ Area-specific restore behavior:
 - **VS Code**: snippets restore per-file (local extras kept). Extensions are not
   auto-installed; restore reports which IDs from `extensions.txt` are missing and
   prints the `code --install-extension` one-liner to install them.
+- **Obsidian**: close it first — it rewrites `.obsidian/*.json` on exit. Snippets
+  restore per-file. Plugin `data.json` lands only where the plugin is already
+  installed; plugins are not auto-installed — install missing ones inside Obsidian
+  (`community-plugins.json` is the list), then re-run restore for their settings.
+  The vault path is hardcoded as `Documents\Obsidian Vault`.
 
 ## Not stored (on purpose)
 
@@ -70,6 +76,10 @@ Area-specific restore behavior:
   shipped files on this machine (the macros in shortcuts.xml are stock).
 - Cmder `user_profile.cmd/.ps1/.sh` and `user_aliases.cmd` — untouched stock
   templates from the 2020 install.
+- Obsidian `workspace.json` and the remember-cursor-position `cursor-positions.json` —
+  runtime state; plugin binaries (`main.js`) and the Minimal theme — reinstallable
+  from the community store. Note content itself is covered separately by the
+  local-backup plugin (zips the vault to Dropbox every 2 h).
 - Visual Studio 2022 — no user snippets/templates exist; `CurrentSettings.vssettings`
   is 370 KB of auto-written machine state. (Only deliberate artifact: a 3.7 KB
   fonts-and-colors export in the 17.0 Settings dir — grab by hand if ever wanted.)

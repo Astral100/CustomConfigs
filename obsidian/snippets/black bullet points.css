@@ -1,0 +1,4 @@
+body {
+    --list-marker-color: var(--text-normal) !important;
+    --text-formatting: var(--text-normal) !important;
+}

@@ -1,0 +1,11 @@
+{
+  "removeHyperlinks": true,
+  "keepHyperlinkText": true,
+  "hyperlinkType": "external",
+  "removeWikilinks": true,
+  "keepWikilinkAliases": true,
+  "hyperlinkWhitelist": "",
+  "wikilinkWhitelist": "",
+  "hyperlinkBlacklist": "",
+  "wikilinkBlacklist": ""
+}

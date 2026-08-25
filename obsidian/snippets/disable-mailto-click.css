@@ -1,0 +1,6 @@
+/* Disable opening the mail client when clicking email links */
+a[href^="mailto:"] {
+  pointer-events: none;   /* stops click */
+  cursor: text;           /* feels like text, not a link */
+  text-decoration: none;  /* optional: make it look non-link */
+}

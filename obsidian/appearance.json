@@ -1,0 +1,9 @@
+{
+  "theme": "moonstone",
+  "cssTheme": "",
+  "enabledCssSnippets": [
+    "black bullet points",
+    "remove strikethrough for checkboxes",
+    "disable-mailto-click"
+  ]
+}

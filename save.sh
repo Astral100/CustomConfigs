@@ -131,6 +131,38 @@ if [ -d "$WIN_HOME/.vscode/extensions" ]; then
     && echo "saved: vscode/extensions.txt ($(wc -l < "$REPO/vscode/extensions.txt") extensions)"
 fi
 
+# --- Obsidian (vault settings + CSS snippets + plugin settings + user scripts;
+# plugin binaries and the Minimal theme are reinstallable — not saved) ---------
+OBS_VAULT="$WIN_HOME/Documents/Obsidian Vault"
+OBS_CFG="$OBS_VAULT/.obsidian"
+if [ -d "$OBS_CFG" ]; then
+  for f in app.json appearance.json community-plugins.json core-plugins.json graph.json hotkeys.json; do
+    copy "$OBS_CFG/$f" "obsidian/$f"
+  done
+  if [ -d "$OBS_CFG/snippets" ]; then
+    mkdir -p "$REPO/obsidian/snippets"
+    rsync -a --delete "$OBS_CFG/snippets/" "$REPO/obsidian/snippets/" && echo "saved: obsidian/snippets/"
+  elif [ -d "$REPO/obsidian/snippets" ]; then
+    rm -rf "$REPO/obsidian/snippets" && echo "removed: obsidian/snippets/ (live folder no longer exists)"
+  fi
+  # Plugin settings only (data.json) — main.js/manifest.json ship with the
+  # plugin install; -m prunes plugin dirs that carry no data.json.
+  if [ -d "$OBS_CFG/plugins" ]; then
+    mkdir -p "$REPO/obsidian/plugins"
+    rsync -am --delete --include='*/' --include='data.json' --exclude='*' \
+      "$OBS_CFG/plugins/" "$REPO/obsidian/plugins/" && echo "saved: obsidian/plugins/ (data.json only)"
+  elif [ -d "$REPO/obsidian/plugins" ]; then
+    rm -rf "$REPO/obsidian/plugins" && echo "removed: obsidian/plugins/ (live folder no longer exists)"
+  fi
+  # Vault-root user scripts (QuickAdd macros run these, e.g. ToggleLineBold.js).
+  # --delete mirrors removals, so a script deleted live disappears here too.
+  mkdir -p "$REPO/obsidian/vault-scripts"
+  rsync -a --delete --exclude='*/' --include='*.js' --exclude='*' \
+    "$OBS_VAULT/" "$REPO/obsidian/vault-scripts/" && echo "saved: obsidian/vault-scripts/"
+else
+  echo "MISSING: $OBS_CFG"
+fi
+
 # --- Safety net: secrets must never land in the repo --------------------------
 find "$REPO" -path "$REPO/.git" -prune -o \( -name '.credentials.json' -o -name 'hosts.yml' \) -print -exec rm -f {} \; | sed 's/^/REMOVED secret file: /'
 
