@@ -10,12 +10,22 @@
     "enabled": false
   },
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"End-of-reply protocol:\\n1. At the very end of your reply, output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "jq -e '.stop_hook_active == true' >/dev/null 2>&1 || echo '{\"decision\":\"block\",\"reason\":\"invoke the simplify-reply skill\",\"suppressOutput\":true}'"
+            "command": "jq -e '(.stop_hook_active == true) or ((.last_assistant_message // \"\") | contains(\"**Concise version:**\"))' >/dev/null 2>&1 || echo '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"Stop\",\"additionalContext\":\"Reply is missing its concise version.\\n1. Output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
           }
         ]
       }

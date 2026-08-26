@@ -10,6 +10,14 @@
                 "input": "\u001f"
             },
             "id": "User.CtrlZAsUndo"
+        },
+        {
+            "command":
+            {
+                "action": "sendInput",
+                "input": "\n"
+            },
+            "id": "User.ShiftEnterNewline"
         }
     ],
     "copyFormatting": "none",
@@ -17,6 +25,10 @@
     "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
     "keybindings": 
     [
+        {
+            "id": "User.ShiftEnterNewline",
+            "keys": "shift+enter"
+        },
         {
             "id": "Terminal.CopyToClipboard",
             "keys": "ctrl+c"
