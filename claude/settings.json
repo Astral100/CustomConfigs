@@ -13,14 +13,14 @@
       "/home/astral100/ClaudeBugFixes"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "claude-fable-5-1",
   "hooks": {
     "UserPromptSubmit": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"End-of-reply protocol:\\n1. At the very end of your reply, output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
+            "command": "printf '%s\\n' '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"End-of-reply protocol:\\n1. At the very end of your reply, output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
           }
         ]
       }
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -e '(.stop_hook_active == true) or ((.last_assistant_message // \"\") | contains(\"**Concise version:**\"))' >/dev/null 2>&1 || echo '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"Stop\",\"additionalContext\":\"Reply is missing its concise version.\\n1. Output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
+            "command": "jq -e '(.stop_hook_active == true) or ((.last_assistant_message // \"\") | contains(\"**Concise version:**\"))' >/dev/null 2>&1 || printf '%s\\n' '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"Stop\",\"additionalContext\":\"Reply is missing its concise version.\\n1. Output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
           }
         ]
       }
@@ -69,14 +69,11 @@
     "enabled": false
   },
   "effortLevel": "high",
-  "autoUpdatesChannel": "stable",
+  "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.237",
   "tui": "fullscreen",
   "theme": "dark",
   "remoteControlAtStartup": false,
-  "feedbackSurveyState": {
-    "lastShownTime": 1754207903141
-  },
   "autoMode": {
     "environment": [
       "### Org-wide",
@@ -104,5 +101,8 @@
       "**Org-specific CLIs**: None configured",
       "routine under Astral100/ prefix: no corroborating evidence found to extend trust beyond the SeedVr.Backend repo itself (ClaudeBugFixes under the same org exists locally but was not corroborated by usage/transcript evidence — omitted)"
     ]
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754207903141
   }
 }

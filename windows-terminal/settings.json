@@ -18,6 +18,22 @@
                 "input": "\n"
             },
             "id": "User.ShiftEnterNewline"
+        },
+        {
+            "command":
+            {
+                "action": "moveTab",
+                "direction": "forward"
+            },
+            "id": "User.MoveTabForward"
+        },
+        {
+            "command":
+            {
+                "action": "moveTab",
+                "direction": "backward"
+            },
+            "id": "User.MoveTabBackward"
         }
     ],
     "copyFormatting": "none",
@@ -52,6 +68,14 @@
         {
             "id": "Terminal.PrevTab",
             "keys": "ctrl+pgup"
+        },
+        {
+            "id": "User.MoveTabForward",
+            "keys": "ctrl+shift+pgdn"
+        },
+        {
+            "id": "User.MoveTabBackward",
+            "keys": "ctrl+shift+pgup"
         }
     ],
     "newTabMenu": 
