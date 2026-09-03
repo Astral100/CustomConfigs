@@ -91,7 +91,7 @@ rsync -aL --delete --delete-excluded --include 'code-reviewer.md' --exclude '*' 
 # Exception: pack skills with local edits (capture rules reworked 2026-09-03:
 # research findings → docs/research/, prototypes → prototypes/ on main) are
 # saved so the forked versions survive a pack reinstall.
-MODIFIED_PACK_SKILLS=(ask-matt prototype wayfinder)
+MODIFIED_PACK_SKILLS=(ask-matt domain-modeling prototype wayfinder)
 SKILL_EXCLUDES=(); PACK_COUNT=0
 for s in "$HOME"/.claude/skills/*/; do
   if [ -f "$s/agents/openai.yaml" ]; then
