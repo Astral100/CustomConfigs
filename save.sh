@@ -88,16 +88,22 @@ rsync -aL --delete --delete-excluded --include 'code-reviewer.md' --exclude '*' 
 # Skills: exclude the Matt Pocock pack (identified by its agents/openai.yaml
 # marker) — installed software, reinstallable from its source, not hand-kept
 # config. --delete-excluded purges previously saved pack copies from the repo.
+# Exception: pack skills with local edits (capture rules reworked 2026-09-03:
+# research findings → docs/research/, prototypes → prototypes/ on main) are
+# saved so the forked versions survive a pack reinstall.
+MODIFIED_PACK_SKILLS=(ask-matt prototype wayfinder)
 SKILL_EXCLUDES=(); PACK_COUNT=0
 for s in "$HOME"/.claude/skills/*/; do
   if [ -f "$s/agents/openai.yaml" ]; then
-    SKILL_EXCLUDES+=(--exclude "/$(basename "$s")/")
+    name=$(basename "$s")
+    case " ${MODIFIED_PACK_SKILLS[*]} " in *" $name "*) continue ;; esac
+    SKILL_EXCLUDES+=(--exclude "/$name/")
     PACK_COUNT=$((PACK_COUNT + 1))
   fi
 done
 mkdir -p "$REPO/claude/skills"
 rsync -aL --delete --delete-excluded "${SKILL_EXCLUDES[@]}" ~/.claude/skills/ "$REPO/claude/skills/" \
-  && echo "saved: claude/skills/ ($PACK_COUNT Matt Pocock pack skills excluded)"
+  && echo "saved: claude/skills/ ($PACK_COUNT pack skills excluded; kept modified: ${MODIFIED_PACK_SKILLS[*]})"
 
 # --- Notepad++ (only config.xml prefs + hand-edited colors in stylers.xml;
 # shortcuts.xml/contextMenu.xml/themes are stock on this machine) --------------
