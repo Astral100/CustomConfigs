@@ -13,24 +13,14 @@
       "/home/astral100/ClaudeBugFixes"
     ]
   },
-  "model": "claude-fable-5-1",
+  "model": "claude-fable-5",
   "hooks": {
     "UserPromptSubmit": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "printf '%s\\n' '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"End-of-reply protocol:\\n1. At the very end of your reply, output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -e '(.stop_hook_active == true) or ((.last_assistant_message // \"\") | contains(\"**Concise version:**\"))' >/dev/null 2>&1 || printf '%s\\n' '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"Stop\",\"additionalContext\":\"Reply is missing its concise version.\\n1. Output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then rewrite this reply to make it concise and easy to understand. Preserve the key facts.\"}}'"
+            "command": "printf '%s\\n' '{\"suppressOutput\":true,\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"End-of-reply protocol:\\n1. At the very end of your reply, output a separator line of 75 `\\u2501` (U+2501) characters.\\n2. On the next line: `**Concise version:**`\\n3. Then restate this reply briefly in plain and easy to understand language: short sentences, a bullet per point, no jargon or abbreviations, written for someone who skipped the full reply. Prefer readability over brevity.\"}}'"
           }
         ]
       }
