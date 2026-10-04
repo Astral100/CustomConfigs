@@ -92,7 +92,9 @@ rsync -aL --delete --delete-excluded --include 'code-reviewer.md' --exclude '*' 
 # research findings → docs/research/, prototypes → prototypes/ on main) are
 # saved so the forked versions survive a pack reinstall.
 MODIFIED_PACK_SKILLS=(ask-matt domain-modeling prototype wayfinder)
-SKILL_EXCLUDES=(); PACK_COUNT=0
+# synced/ holds Anthropic's auto-downloaded platform skills (account-id-keyed
+# buckets) — re-synced by Claude Code itself, not hand-kept config.
+SKILL_EXCLUDES=(--exclude '/synced/'); PACK_COUNT=0
 for s in "$HOME"/.claude/skills/*/; do
   if [ -f "$s/agents/openai.yaml" ]; then
     name=$(basename "$s")

@@ -94,5 +94,6 @@
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754207903141
-  }
+  },
+  "switchModelsOnFlag": false
 }
