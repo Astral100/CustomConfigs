@@ -1,0 +1,22 @@
+# Personal aliases — anything here shows under "custom" in `al`, in this file's order.
+alias br='source ~/.bashrc'
+alias cbf='cd ~/ClaudeBugFixes'
+alias cc='cd /mnt/d/Programming/_CustomConfigs'
+alias pg='cd "/mnt/d/Programming/Playground"'
+alias cf='cd /mnt/d/Programming/CoinFlipper'
+alias sx='cd /mnt/d/Programming/Scalex'
+alias svr='cd "/mnt/d/Video Upscaling/SeedVr"'
+alias add='"/mnt/c/Program Files/Notepad++/notepad++.exe" "$(wslpath -w ~/.bash_aliases)" &'
+
+# run 'br' after and 'al' will shows the change
+
+# List aliases with the ones from this file grouped at the bottom.
+al() {
+  local names
+  names=$(grep -oE '^[[:space:]]*alias [^=]+' ~/.bash_aliases | sed 's/.*alias //' | paste -sd'|')
+  if [ -z "$names" ]; then alias; return; fi
+  alias | grep -vE "^alias ($names)="
+  echo "--- custom (~/.bash_aliases) ---"
+  grep -oE '^[[:space:]]*alias [^=]+' ~/.bash_aliases | sed 's/.*alias //' \
+    | while read -r n; do alias "$n" 2>/dev/null; done | grep --color=auto -E "^alias ($names)="
+}

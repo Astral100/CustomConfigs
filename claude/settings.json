@@ -1,5 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "cleanupPeriodDays": 365,
   "permissions": {
     "ask": [
       "Bash(rm *)",
@@ -59,23 +60,29 @@
     "enabled": false
   },
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-fable-5-2": {
+      "effortLevel": "high"
+    }
+  },
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.237",
   "tui": "fullscreen",
   "theme": "dark",
+  "switchModelsOnFlag": false,
   "remoteControlAtStartup": false,
   "autoMode": {
     "environment": [
       "### Org-wide",
       "**Organization**: None configured",
       "**Cloud provider(s)**: None configured",
-      "**Repository visibility**: PUBLIC — Astral100/SeedVr.Backend (github.com) — any push here is publishing",
+      "**Repository visibility**: PUBLIC — Astral100/Scalex (github.com) — any push here is publishing",
       "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
       "**Secrets management**: None configured",
       "**Default / protected branches**: unknown default branch (origin/HEAD unset); no rulesets or protected branches listed via gh — but a non-empty Rulesets/protection query returning empty does not by itself guarantee unprotected, treat main branch pushes with normal care",
       "**CI/CD deploy targets**: None configured",
       "**Network posture**: None configured",
-      "**Source control**: The trusted repo (Astral100/SeedVr.Backend on github.com) and its remote(s) only — no additional orgs configured",
+      "**Source control**: The trusted repo (Astral100/Scalex on github.com) and its remote(s) only — no additional orgs configured",
       "**Trusted internal domains**: None configured",
       "**Trusted cloud buckets**: None configured",
       "**Key internal services**: None configured",
@@ -87,13 +94,12 @@
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
       "### User-specific",
       "**Primary use of Claude Code**: software development",
-      "**Trusted repo**: /mnt/d/Programming/PixUp/SeedVr.Backend (working directory) and its remote github.com/Astral100/SeedVr.Backend.git — repo is PUBLIC, so only this repo's own work is OK to push there; content ported or first read from outside this session's repo is not its own work; secrets and sensitive/personal data are never cleared into it regardless of visibility",
+      "**Trusted repo**: /mnt/d/Programming/Scalex (working directory) and its remote github.com/Astral100/Scalex.git — repo is PUBLIC, so only this repo's own work is OK to push there; content ported or first read from outside this session's repo is not its own work; secrets and sensitive/personal data are never cleared into it regardless of visibility",
       "**Org-specific CLIs**: None configured",
-      "routine under Astral100/ prefix: no corroborating evidence found to extend trust beyond the SeedVr.Backend repo itself (ClaudeBugFixes under the same org exists locally but was not corroborated by usage/transcript evidence — omitted)"
+      "routine under Astral100/ prefix: no corroborating evidence found to extend trust beyond the Scalex repo itself (formerly SeedVr.Backend) (ClaudeBugFixes under the same org exists locally but was not corroborated by usage/transcript evidence — omitted)"
     ]
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754207903141
-  },
-  "switchModelsOnFlag": false
+  }
 }

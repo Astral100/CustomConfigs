@@ -151,7 +151,7 @@ for tgt in "$WIN_HOME/Documents/PowerShell/Microsoft.PowerShell_profile.ps1" \
 done
 
 echo
-echo "== Bash (~/.bashrc custom block) =="
+echo "== Bash (~/.bashrc custom block, ~/.bash_aliases) =="
 MARK_START="# >>> CustomConfigs >>>"
 MARK_END="# <<< CustomConfigs <<<"
 if [ -f "$REPO/bash/bashrc-custom.sh" ]; then
@@ -194,6 +194,8 @@ if [ -f "$REPO/bash/bashrc-custom.sh" ]; then
     fi
   fi
 fi
+# Whole-file restore: stock ~/.bashrc already sources ~/.bash_aliases if present.
+install_file bash/bash_aliases ~/.bash_aliases
 
 echo
 echo "== WSL config =="
@@ -249,12 +251,12 @@ done
 
 echo
 echo "== Notepad++ =="
-# N++ rewrites config.xml when it exits — close Notepad++ first, or the running
-# instance clobbers the restored file on close.
+# Only stylers.xml is restored (config.xml is not part of the backup set). N++
+# loads it at startup — close Notepad++ first so a running instance neither
+# ignores the restored colors nor writes its own copy back.
 NPP_DIR="$WIN_HOME/AppData/Roaming/Notepad++"
 if [ -d "$NPP_DIR" ]; then
-  note "close Notepad++ before overwriting — it rewrites config.xml on exit"
-  install_file notepad++/config.xml "$NPP_DIR/config.xml"
+  note "close Notepad++ before overwriting — it loads stylers.xml at startup"
   install_file notepad++/stylers.xml "$NPP_DIR/stylers.xml"
 else
   note "Notepad++ not found ($NPP_DIR missing) — skipping"

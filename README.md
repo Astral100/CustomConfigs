@@ -9,11 +9,11 @@ Only real customizations are stored — no defaults, no machine state, no secret
 |---|---|---|
 | `windows-terminal/` | `settings.json` snapshot (real deltas: Ctrl+Z→undo action, Ctrl+PgUp/PgDn tab nav, default profile, `copyFormatting: none`, hidden VS profiles) | `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_*\LocalState\` |
 | `powershell/` | One canonical profile (PSReadLine chords, `cf`/`svr`/`br`, OSC 9;9 cwd prompt) | `Documents\PowerShell\` **and** `Documents\WindowsPowerShell\` (identical copies) |
-| `bash/` | `bashrc-custom.sh` — only the custom tail appended after stock Ubuntu skel (PATH, nvm, `claude()` wrapper, aliases, OSC 9;9) | end of `~/.bashrc` |
-| `wsl/` | `wsl.conf` (systemd, default user), `.wslconfig` (guiApplications=false) | `/etc/wsl.conf`, `C:\Users\<user>\.wslconfig` |
+| `bash/` | `bashrc-custom.sh` — only the custom tail appended after stock Ubuntu skel (PATH, nvm, `claude()` wrapper, aliases, OSC 9;9); `bash_aliases` — personal shortcuts and the `al` lister, whole file | end of `~/.bashrc`; `~/.bash_aliases` |
+| `wsl/` | `wsl.conf` (systemd, default user), `.wslconfig` (guiApplications=true) | `/etc/wsl.conf`, `C:\Users\<user>\.wslconfig` |
 | `git/` | `gitconfig` (autocrlf, gh credential helper), global `ignore` | `~/.gitconfig`, `~/.config/git/ignore` |
 | `claude/` | `CLAUDE.md`, `settings.json`, `keybindings.json`, `statusline-command.sh`, `scripts/`, `agents/` (code-reviewer only), `skills/` (hand-kept only), `notes/` | `~/.claude/` |
-| `notepad++/` | `config.xml` (word wrap, tab size 4, indent guides, date-time format, ~a dozen prefs), `stylers.xml` (hand-edited colors: current-line, selection, caret) | `%APPDATA%\Notepad++\` |
+| `notepad++/` | `stylers.xml` (hand-edited colors: current-line, selection, caret). `config.xml` is deliberately not saved — mostly defaults and window state, plus personal find/file history | `%APPDATA%\Notepad++\` |
 | `cmder/` | `user-ConEmu.xml` (Consolas 18, custom color table, startup tasks), `settings` (clink: Ctrl+D exits, Esc clears line) | `C:\Program Files\cmder\config\` — the **install dir**, not the user profile |
 | `vscode/` | `settings.json` (40+ prefs), `keybindings.json` (5 rebinds), `snippets/`, `extensions.txt` (deduped reinstall list) | `%APPDATA%\Code\User\`; extensions in `%USERPROFILE%\.vscode\extensions\` |
 | `obsidian/` | vault settings (`hotkeys.json`, `appearance.json`, `app.json`, `graph.json`, plugin lists), `snippets/` (3 custom CSS), `plugins/` (per-plugin `data.json` — QuickAdd "Bold Line" macro etc.), `vault-scripts/` (`ToggleLineBold.js`) | `Documents\Obsidian Vault\.obsidian\`; scripts in the vault root |
@@ -49,11 +49,13 @@ Area-specific restore behavior:
   `# <<< CustomConfigs <<<` markers and updated in place on later runs. If the
   content already exists unmarked (the original machine), restore reports it and
   leaves it alone — wrap it in the markers by hand to switch to managed updates.
+  `~/.bash_aliases` is restored as a whole file (diff + prompt + backup when it
+  differs); stock `~/.bashrc` sources it automatically.
 - **wsl.conf**: `[user] default=` is rewritten to the *current* machine's
   username before installing, so a foreign username can never break WSL login.
 - **Claude**: per-file, so machine-local extras are never deleted.
-- **Notepad++**: close it before overwriting — it rewrites `config.xml` on exit
-  and would clobber the restored file.
+- **Notepad++**: close it before overwriting — it loads `stylers.xml` at startup,
+  so a running instance would not show the restored colors.
 - **Cmder**: targets live under `C:\Program Files`, where WSL writes can fail
   without elevation — if the copy fails, do it from an admin shell.
 - **VS Code**: snippets restore per-file (local extras kept). Extensions are not

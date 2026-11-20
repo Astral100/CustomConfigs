@@ -60,6 +60,9 @@ else
   fi
   echo "      saved a FULL copy as bash/bashrc-full — trim it manually."
 fi
+# Aliases + the `al` lister: wholly our own file (stock skel sources it if
+# present), so it is copied as-is instead of being split like ~/.bashrc.
+copy ~/.bash_aliases bash/bash_aliases
 
 # --- WSL ----------------------------------------------------------------------
 copy /etc/wsl.conf wsl/wsl.conf
@@ -107,10 +110,11 @@ mkdir -p "$REPO/claude/skills"
 rsync -aL --delete --delete-excluded "${SKILL_EXCLUDES[@]}" ~/.claude/skills/ "$REPO/claude/skills/" \
   && echo "saved: claude/skills/ ($PACK_COUNT pack skills excluded; kept modified: ${MODIFIED_PACK_SKILLS[*]})"
 
-# --- Notepad++ (only config.xml prefs + hand-edited colors in stylers.xml;
-# shortcuts.xml/contextMenu.xml/themes are stock on this machine) --------------
+# --- Notepad++ (only the hand-edited colors in stylers.xml. config.xml is not
+# saved: mostly defaults and window state, plus personal find/file history that
+# must not land in this public repo; shortcuts.xml/contextMenu.xml/themes are
+# stock on this machine) -------------------------------------------------------
 NPP_DIR="$WIN_HOME/AppData/Roaming/Notepad++"
-copy "$NPP_DIR/config.xml" notepad++/config.xml
 copy "$NPP_DIR/stylers.xml" notepad++/stylers.xml
 
 # --- Cmder (config lives in the INSTALL dir, not the user profile) ------------
