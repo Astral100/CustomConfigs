@@ -1,7 +1,7 @@
 # Personal aliases — anything here shows under "custom" in `al`, in this file's order.
 alias br='source ~/.bashrc'
 alias cbf='cd ~/ClaudeBugFixes'
-alias cc='cd /mnt/d/Programming/_CustomConfigs'
+alias cc='cd /mnt/d/Programming/CustomConfigs'
 alias pg='cd "/mnt/d/Programming/Playground"'
 alias cf='cd /mnt/d/Programming/CoinFlipper'
 alias sx='cd /mnt/d/Programming/Scalex'

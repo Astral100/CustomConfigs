@@ -241,7 +241,7 @@ done
 # Per-file install so local-only files are never deleted. On the original machine
 # ~/.claude/skills/* are symlinks into ~/.agents/skills — an overwrite there
 # writes THROUGH the symlink into the linked source (same content, intended).
-for d in scripts agents skills notes; do
+for d in scripts hooks agents skills notes; do
   [ -d "$REPO/claude/$d" ] || continue
   while IFS= read -r -d '' src; do
     rel="${src#"$REPO/claude/"}"

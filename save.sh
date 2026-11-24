@@ -78,7 +78,7 @@ for f in CLAUDE.md settings.json keybindings.json statusline-command.sh; do
 done
 # -L dereferences symlinks so the repo holds real files (skills/* point into
 # ~/.agents/skills, the fork-watch scripts point into ~/ClaudeBugFixes).
-for d in scripts notes; do
+for d in scripts notes hooks; do
   mkdir -p "$REPO/claude/$d"
   rsync -aL --delete ~/.claude/"$d"/ "$REPO/claude/$d/" && echo "saved: claude/$d/"
 done
